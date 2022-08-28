@@ -164,25 +164,18 @@ pub fn download_prebuilt(
 fn prebuilt_url(tool: &Tool, version: &str) -> Result<String, failure::Error> {
     let target = if target::LINUX && target::x86_64 {
         match tool {
-            Tool::WasmOpt => "x86-linux",
+            Tool::WasmBindgen => "x86_64-linux",
+            Tool::WasmOpt => "x86_64-linux",
             _ => "x86_64-unknown-linux-musl",
         }
-    } else if target::LINUX && target::x86 {
-        match tool {
-            Tool::WasmOpt => "x86-linux",
-            _ => bail!("Unrecognized target!"),
-        }
-    } else if target::MACOS && (target::x86_64 || target::aarch64) {
-        "x86_64-apple-darwin"
+    } else if target::MACOS && target::aarch64 {
+        "arm64-macos"
+    } else if target::MACOS && target::x86_64 {
+        "x86_64-macos"
     } else if target::WINDOWS && target::x86_64 {
         match tool {
-            Tool::WasmOpt => "x86-windows",
+            Tool::WasmOpt => "x86_64-windows",
             _ => "x86_64-pc-windows-msvc",
-        }
-    } else if target::WINDOWS && target::x86 {
-        match tool {
-            Tool::WasmOpt => "x86-windows",
-            _ => bail!("Unrecognized target!"),
         }
     } else {
         bail!("Unrecognized target!")
@@ -207,7 +200,7 @@ fn prebuilt_url(tool: &Tool, version: &str) -> Result<String, failure::Error> {
         Tool::WasmOpt => {
             Ok(format!(
         "https://github.com/WebAssembly/binaryen/releases/download/{vers}/binaryen-{vers}-{target}.tar.gz",
-        vers = "version_108",
+        vers = "version_109",
         target = target,
             ))
         }
